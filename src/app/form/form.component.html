@@ -14,15 +14,19 @@
                     [defaultValue]='singleInput.default_value'
                     [multiple]='singleInput.multiple'
                     [readonly]='singleInput.readonly' 
-                    required 
-                    minlength="3"
-                    maxlength="64"
+                    [required]="singleInput.rules.split('|')[0]" 
+                    [minlength]="singleInput.rules.split('|')[1].split(':')[1]"
+                    [maxlength]="singleInput.rules.split('|')[2].split(':')[2]"
+                    [attr.disabled] = "sendingEmail ? 'disabled' : null"
                 >
         
                 <div class="error" *ngIf='formError && emailField.invalid'>
                     <p *ngIf='emailField.errors!.required'>This field is required</p>
                     <p *ngIf='emailField.errors!.minlength'>Email must be at least 3 characters</p>
                     <p *ngIf='emailField.errors!.maxlength'>Email cannot be more than 64 characters</p>
+                </div>
+                <div class="error" *ngIf='emailInvalid'>
+                    <p>Your email address is not valid</p>
                 </div>
             </div>
             
@@ -42,6 +46,7 @@
                     required
                     minlength="3"
                     maxlength="64"
+                    [attr.disabled] = "sendingEmail ? 'disabled' : null"
                 >
 
                 <div class="error" *ngIf='formError && nameField.invalid'>
@@ -56,15 +61,20 @@
 
                 <select 
                     [(ngModel)]='singleInput.name' 
-                    name='singleInput.name' 
+                    [name]='singleInput.name' 
                     [value]='singleInput.default_value'
-                >
+                    required
+                    [attr.disabled] = "sendingEmail ? 'disabled' : null"
+                >   
                     <option *ngFor='let option of singleInput.options' [value]='option.balue'>{{ option.label }}</option>
                 </select>
             </div>
             
         </div>
 
-        <button *ngIf='1formError' disabled>submit</button>
+                    
+        <button [attr.disabled] = "sendingEmail ? 'disabled' : null">Submit</button>
+
+        <h3 *ngIf='showUserMessage' class='final-message'>{{ userMessage }}</h3>
     </form>
 </div>

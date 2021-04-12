@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm, Validators } from '@angular/forms';
 import { SingleInput } from '../single-input.model';
 import { SingleInputService } from '../single-input.service';
+import { FormServiceService } from '../form-service.service';
 
 @Component({
   selector: 'app-form',
@@ -14,8 +15,19 @@ export class FormComponent implements OnInit {
 
   formError: boolean;
   formInvalid: boolean = true;
+  emailInvalid: boolean;
 
-  constructor(private inputService: SingleInputService) { }
+  showUserMessage: boolean
+  userMessage: string;
+  showUserError: boolean
+  userError: string;
+
+  sendingEmail: boolean;
+
+  constructor(
+    private inputService: SingleInputService,
+    private formService: FormServiceService
+  ) { }
 
   ngOnInit(): void {
     this.getInputs();
@@ -24,19 +36,54 @@ export class FormComponent implements OnInit {
   getInputs() {
     this.inputService.getInputs().subscribe(inputs => {
       this.allInputs = inputs;
-      console.log(inputs);
     });
   }
 
   onSubmit(form: NgForm) {
-    console.log(form);
+    console.log(form.value);
+    var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
+
     if(form.invalid) {
-      console.log('form is invalid');
       this.formError = true;
 
       return;
-    } else {
-      this.formInvalid = false;
+    } else if(emailRegex.test(form.value.sender_mail) == false) {
+      this.emailInvalid = true;
+
+      return;
+    } else if(emailRegex.test(form.value.sender_mail) == true) {
+
+      this.emailInvalid = false;
+
+      this.sendingEmail = true;
     }
+
+    const info = {
+      email: form.value.sender_mail,
+      name: form.value.person_name,
+      country:form.value.country 
+    }
+
+    this.formService.sendEmail(info).subscribe(response => {
+      console.log(response)
+      if(response.mess === 'mail sent') {
+        this.showUserMessage = true;
+
+        this.userMessage = `Email has been sent to: ${info.email}`;
+
+        this.sendingEmail = false;
+
+        setTimeout(() => {
+          this.showUserMessage = false;
+
+          this.userMessage = '';
+        }, 5000)
+
+      } else {
+        this.showUserError = true;
+
+        this.userError = 'There was an error sending email';
+      }
+    });
   }
 }
