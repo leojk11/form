@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { SingleInput } from '../single-input.model';
 import { SingleInputService } from '../single-input.service';
 import { FormServiceService } from '../form-service.service';
@@ -14,13 +14,14 @@ export class FormComponent implements OnInit {
   allInputs: SingleInput[];
 
   formError: boolean;
-  formInvalid: boolean = true;
   emailInvalid: boolean;
 
   showUserMessage: boolean
   userMessage: string;
   showUserError: boolean
   userError: string;
+  showCountryError: boolean;
+  countryError: string;
 
   sendingEmail: boolean;
 
@@ -39,10 +40,14 @@ export class FormComponent implements OnInit {
     });
   }
 
+
   onSubmit(form: NgForm) {
-    console.log(form.value);
+    console.log(form.value.country);
     var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
 
+    // if(form.value.country == 'country') {
+    //   console.log('leo')
+    // }
     if(form.invalid) {
       this.formError = true;
 
@@ -55,35 +60,47 @@ export class FormComponent implements OnInit {
 
       this.emailInvalid = false;
 
+    }
+
+    if(form.value.country == 'country') {
+      console.log('choose country')
+      this.showCountryError = true;
+
+      this.countryError = 'Please choose your country';
+
+      return;
+    } else {
       this.sendingEmail = true;
-    }
 
-    const info = {
-      email: form.value.sender_mail,
-      name: form.value.person_name,
-      country:form.value.country 
-    }
-
-    this.formService.sendEmail(info).subscribe(response => {
-      console.log(response)
-      if(response.mess === 'mail sent') {
-        this.showUserMessage = true;
-
-        this.userMessage = `Email has been sent to: ${info.email}`;
-
-        this.sendingEmail = false;
-
-        setTimeout(() => {
-          this.showUserMessage = false;
-
-          this.userMessage = '';
-        }, 5000)
-
-      } else {
-        this.showUserError = true;
-
-        this.userError = 'There was an error sending email';
+      const info = {
+        email: form.value.sender_mail,
+        name: form.value.person_name,
+        country:form.value.country 
       }
-    });
+  
+      this.formService.sendEmail(info).subscribe(response => {
+        console.log(response)
+        if(response.mess === 'mail sent') {
+          this.showUserMessage = true;
+  
+          this.userMessage = `Email has been sent to: ${info.email}`;
+  
+          this.sendingEmail = false;
+  
+          setTimeout(() => {
+            this.showUserMessage = false;
+            this.showCountryError = false;
+  
+            this.userMessage = '';
+            this.countryError = '';
+          }, 5000)
+  
+        } else {
+          this.showUserError = true;
+  
+          this.userError = 'There was an error sending email';
+        }
+      });
+    }
   }
 }

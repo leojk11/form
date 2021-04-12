@@ -43,9 +43,9 @@
                     [defaultValue]='singleInput.default_value'
                     [mutiple]='singleInput.mutiple'
                     [readonly]='singleInput.readonly'
-                    required
-                    minlength="3"
-                    maxlength="64"
+                    [required]="singleInput.rules.split('|')[0]" 
+                    [minlength]="singleInput.rules.split('|')[1].split(':')[1]"
+                    [maxlength]="singleInput.rules.split('|')[2].split(':')[2]"
                     [attr.disabled] = "sendingEmail ? 'disabled' : null"
                 >
 
@@ -68,10 +68,12 @@
                 >   
                     <option *ngFor='let option of singleInput.options' [value]='option.balue'>{{ option.label }}</option>
                 </select>
-            </div>
-            
-        </div>
 
+                <div class="error" *ngIf='showCountryError'>
+                    <p>{{ countryError }}</p>
+                </div>
+            </div>
+        </div>
                     
         <button [attr.disabled] = "sendingEmail ? 'disabled' : null">Submit</button>
 
