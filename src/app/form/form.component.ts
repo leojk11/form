@@ -42,12 +42,9 @@ export class FormComponent implements OnInit {
 
 
   onSubmit(form: NgForm) {
-    console.log(form.value.country);
+    // console.log(form.value.country);
     var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
 
-    // if(form.value.country == 'country') {
-    //   console.log('leo')
-    // }
     if(form.invalid) {
       this.formError = true;
 
@@ -63,13 +60,16 @@ export class FormComponent implements OnInit {
     }
 
     if(form.value.country == 'country') {
-      console.log('choose country')
+      // console.log('choose country')
       this.showCountryError = true;
 
       this.countryError = 'Please choose your country';
 
       return;
     } else {
+      this.showCountryError = false;
+      this.countryError = '';
+
       this.sendingEmail = true;
 
       const info = {
@@ -79,25 +79,21 @@ export class FormComponent implements OnInit {
       }
   
       this.formService.sendEmail(info).subscribe(response => {
-        console.log(response)
+        // console.log(response)
         if(response.mess === 'mail sent') {
           this.showUserMessage = true;
-  
           this.userMessage = `Email has been sent to: ${info.email}`;
   
           this.sendingEmail = false;
-  
+
           setTimeout(() => {
             this.showUserMessage = false;
-            this.showCountryError = false;
   
             this.userMessage = '';
-            this.countryError = '';
           }, 5000)
   
         } else {
           this.showUserError = true;
-  
           this.userError = 'There was an error sending email';
         }
       });
