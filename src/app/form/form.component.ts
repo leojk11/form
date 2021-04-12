@@ -42,61 +42,72 @@ export class FormComponent implements OnInit {
 
 
   onSubmit(form: NgForm) {
-    // console.log(form.value.country);
     var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
 
-    if(form.invalid) {
-      this.formError = true;
+    // check if form is invalid
+    switch(form.invalid) {
+      case true:
+        this.formError = true;
+        return;
+    }
+    // check if email is valid, if not show error message
+    switch(emailRegex.test(form.value.sender_mail)) {
+      case false:
+        this.emailInvalid = true;
 
-      return;
-    } else if(emailRegex.test(form.value.sender_mail) == false) {
-      this.emailInvalid = true;
+        return
 
-      return;
-    } else if(emailRegex.test(form.value.sender_mail) == true) {
-
-      this.emailInvalid = false;
-
+      case true:
+        this.emailInvalid = false
     }
 
-    if(form.value.country == 'country') {
-      // console.log('choose country')
-      this.showCountryError = true;
+    // check if user chose country, if not remind them to choose
+    switch(form.value.country) {
+      case 'country':
+        this.showCountryError = true;
+        this.countryError = 'Please choose your country';
 
-      this.countryError = 'Please choose your country';
+        return;
+      
+      default:
+        this.showCountryError = false;
+        this.countryError = '';
+    }
 
-      return;
-    } else {
-      this.showCountryError = false;
-      this.countryError = '';
+    this.sendingEmail = true;
 
-      this.sendingEmail = true;
+    // get information from form
+    const info = {
+      email: form.value.sender_mail,
+      name: form.value.person_name,
+      country:form.value.country 
+    }
 
-      const info = {
-        email: form.value.sender_mail,
-        name: form.value.person_name,
-        country:form.value.country 
-      }
-  
-      this.formService.sendEmail(info).subscribe(response => {
-        // console.log(response)
-        if(response.mess === 'mail sent') {
+    this.formService.sendEmail(info).subscribe(response => {
+      // check if response is ok, show message that email has been sent
+      switch(response.mess) {
+        case 'mail sent':
+          // if email has been sent, show message
           this.showUserMessage = true;
           this.userMessage = `Email has been sent to: ${info.email}`;
   
+          // turn off disabled from all inputs and button
           this.sendingEmail = false;
 
+          // remove the message after 5 sec
           setTimeout(() => {
             this.showUserMessage = false;
-  
             this.userMessage = '';
-          }, 5000)
-  
-        } else {
+          }, 5000);
+        
+        case 'ERROR_500':
+          // if there is an error, tell the user that there was error
           this.showUserError = true;
           this.userError = 'There was an error sending email';
-        }
-      });
-    }
+
+          this.sendingEmail = false;
+      }
+      
+    });
   }
 }
