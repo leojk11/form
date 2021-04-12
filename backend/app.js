@@ -19,6 +19,23 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/send-email', (req, res) => {
+    var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
+
+    switch(emailRegex.test(req.query.userEmail)) {
+        case false:
+            res.status(200).json({ mess: 'Your email is invalid' });
+    }
+
+    switch(req.query.userName) {
+        case '':
+            res.status(200).json({ mess: 'Please enter your name' })
+    }
+
+    switch(req.query.userCountry) {
+        case 'country':
+            res.status(200).json({ mess: 'Please choose your country' })
+    }
+
     const userEmail = req.query.userEmail;
 
     var transporter = nodemailer.createTransport({
@@ -45,6 +62,8 @@ app.post('/send-email', (req, res) => {
             console.log('Email sent:' + info.response);
         }
     })
+
+    // res.status(200).json({ mess: 'mail sent' })
 })
 
 const port = process.env.PORT || 5000;

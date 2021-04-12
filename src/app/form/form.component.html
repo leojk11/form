@@ -4,7 +4,7 @@
         <div *ngFor='let singleInput of allInputs'>
             <div class="form-field" *ngIf="singleInput.type === 'email'" >
                 <label>{{ singleInput.label }}</label>
-        
+
                 <input 
                     ngModel 
                     #emailField='ngModel' 
@@ -29,7 +29,8 @@
                     <p>Your email address is not valid</p>
                 </div>
             </div>
-            
+
+
             <div class="form-field" *ngIf="singleInput.type === 'text'" >
                 <label>{{ singleInput.label }}</label>
         
@@ -55,7 +56,7 @@
                     <p *ngIf='nameField.errors!.maxlength'>Email cannot be more than 64 characters</p>
                 </div>
             </div>
-            
+
             <div class="form-field" *ngIf="singleInput.type === 'select'">
                 <label>{{ singleInput.label }}</label>
 
