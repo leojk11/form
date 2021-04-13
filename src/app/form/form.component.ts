@@ -19,19 +19,13 @@ export class FormComponent implements OnInit {
 
   allInputs: SingleInput[];
   form!: FormGroup;
-  payload!: '';
 
   formError: boolean = false;
-
-  emailInvalid: boolean;
-  emailInvalidMessage: string;
 
   showUserMessage: boolean
   userMessage: string;
   showUserError: boolean = false;
   userError: string;
-  showCountryError: boolean;
-  countryError: string;
 
   sendingEmail: boolean;
 
@@ -97,6 +91,7 @@ export class FormComponent implements OnInit {
     this.formService.sendEmail(info).subscribe(response => {
       // check if response is ok, show message that email has been sent
       switch(response.mess) {
+        // if no email is passed the server will return error
         case 'Your email is invalid':
           this.showUserError = true;
           this.userError = response.mess;
@@ -104,6 +99,7 @@ export class FormComponent implements OnInit {
           this.sendingEmail = false;
 
           return;
+        // if no name is passed the server will return error
         case 'Please enter your name':
           this.showUserError = true;
           this.userError = response.mess;
@@ -111,6 +107,7 @@ export class FormComponent implements OnInit {
           this.sendingEmail = false;
           
           return;
+        // if no country is passed the server will return error
         case 'Please choose your country':
           this.showUserError = true;
           this.userError = response.mess;
@@ -133,6 +130,7 @@ export class FormComponent implements OnInit {
           }, 5000);
       }
       
+      // if email is not sent show error  
       if(response.mess !== 'mail sent') {
         this.showUserError = true;
         this.userError = 'There was an error sending your mail.'

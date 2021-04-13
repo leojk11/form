@@ -5,21 +5,31 @@
 
     margin-top: 15px;
 
-    select {
-        padding: 10px;
+    label {
+        width: 150px;
+        
+        font-weight: bold;
 
-        border: none;
-
-        background-color: whitesmoke;
-
-        outline: none;
+        color: gray;
     }
 
-    .errors {
+    .inner-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-items: flex-start;
+        gap: 5;
+
         margin-left: 15px;
 
-        p {
-            color: red;
+        .errors {
+            width: 100%;
+
+            margin-top: 5px;
+    
+            padding: 10px;
+    
+            background-color: rgba(red, 0.2);
         }
     }
 }
@@ -34,6 +44,4 @@
     background-color: whitesmoke;
 
     outline: none;
-
-    margin-left: 15px;
 }

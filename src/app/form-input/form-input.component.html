@@ -4,78 +4,81 @@
         <div class='form-field' *ngSwitchCase="'text'">
             <label class='form-field-label'>{{ input.label }}</label>
 
-            <input 
-                class='form-field-input' 
-                [formControlName]="input.name" 
-                [type]="input.type"
-                [required]="input.rules.split('|')[0]"
-                [minLength]="input.rules.split('|')[1].split(':')[1]"
-                [maxLength]="input.rules.split('|')[2].split(':')[1]"
-                [placeholder]='input.placeholder'
-                [mutiple]='input.multiple'
-                [readonly]='input.readonly'
-                [attr.disabled]="sendingMail ? 'disabled' : null"
-            >
+            <div class="inner-wrapper">
+                <input 
+                    class='form-field-input' 
+                    [formControlName]="input.name" 
+                    [type]="input.type"
+                    [required]="input.rules.split('|')[0]"
+                    [minLength]="input.rules.split('|')[1].split(':')[1]"
+                    [maxLength]="input.rules.split('|')[2].split(':')[1]"
+                    [placeholder]='input.placeholder'
+                    [mutiple]='input.multiple'
+                    [readonly]='input.readonly'
+                    [attr.disabled]="sendingMail ? 'disabled' : null"
+                >
 
-            <div class="errors" *ngIf="formError && form.controls.person_name.invalid">
-                <p 
-                    *ngIf='formError && form.controls.person_name.errors.required'
-                >This field is required</p>
+                <div class="errors" *ngIf="formError && form.controls.person_name.invalid">
+                    <p 
+                        *ngIf='formError && form.controls.person_name.errors.required'
+                    >This field is required</p>
 
-                <p 
-                    *ngIf='formError && form.controls.person_name.errors.minlength'
-                >Name must be at least {{ form.controls.person_name.errors.minlength.requiredLength }} characters.</p>
+                    <p 
+                        *ngIf='formError && form.controls.person_name.errors.minlength'
+                    >Name must be at least {{ form.controls.person_name.errors.minlength.requiredLength }} characters.</p>
+                </div>
             </div>
-            
-
         </div>
 
         <div class='form-field' *ngSwitchCase="'email'">
             <label>{{ input.label }}</label>
 
-            <input 
-                class='form-field-input' 
-                [formControlName]="input.name" 
-                [type]="input.type"
-                [required]="input.rules.split('|')[0]"
-                [minLength]="input.rules.split('|')[1].split(':')[1]"
-                [maxLength]="input.rules.split('|')[2].split(':')[1]"
-                [placeholder]='input.placeholder'
-                [mutiple]='input.multiple'
-                [readonly]='input.readonly'
-                [attr.disabled]="sendingMail ? 'disabled' : null"
-            >
+            <div class="inner-wrapper">
+                <input 
+                    class='form-field-input' 
+                    [formControlName]="input.name" 
+                    [type]="input.type"
+                    [required]="input.rules.split('|')[0]"
+                    [minLength]="input.rules.split('|')[1].split(':')[1]"
+                    [maxLength]="input.rules.split('|')[2].split(':')[1]"
+                    [placeholder]='input.placeholder'
+                    [mutiple]='input.multiple'
+                    [readonly]='input.readonly'
+                    [attr.disabled]="sendingMail ? 'disabled' : null"
+                >
 
-            <div class="errors" *ngIf='formError && form.controls.sender_mail.invalid'>
-                <p 
-                    *ngIf='form.controls.sender_mail.errors.required'
-                >This field is required</p>
+                <div class="errors" *ngIf='formError && form.controls.sender_mail.invalid'>
+                    <p 
+                        *ngIf='form.controls.sender_mail.errors.required'
+                    >This field is required</p>
 
-                <p 
-                    *ngIf='form.controls.sender_mail.errors.minlength'
-                >Name must be at least {{ form.controls.sender_mail.errors.minlength.requiredLength }} characters.</p>
+                    <p 
+                        *ngIf='form.controls.sender_mail.errors.minlength'
+                    >Name must be at least {{ form.controls.sender_mail.errors.minlength.requiredLength }} characters.</p>
 
-                <p 
-                    *ngIf='form.controls.sender_mail.errors.email'
-                >Email is not valid.</p>
+                    <p 
+                        *ngIf='form.controls.sender_mail.errors.email'
+                    >Email is not valid.</p>
+                </div>
             </div>
         </div>
 
         <div class='form-field' *ngSwitchCase="'select'">
             <label>{{ input.label }}</label>
 
-            <select name="" id="" [formControlName]="input.name" [attr.disabled]="sendingMail ? 'disabled' : null">
+            <div class="inner-wrapper">
+                <select class='form-field-input'  [formControlName]="input.name" [attr.disabled]="sendingMail ? 'disabled' : null">
                 
-                <option *ngFor='let option of input.options' [value]='option.balue'>{{ option.label }}</option>
-
-            </select>
-
-            <div class="errors" *ngIf='formError && form.controls.country.invalid'>
-                <p 
-                    *ngIf='formError && form.controls.country.errors.required'
-                >This field is required</p>
+                    <option *ngFor='let option of input.options' [value]='option.balue'>{{ option.label }}</option>
+    
+                </select>
+    
+                <div class="errors" *ngIf='formError && form.controls.country.invalid'>
+                    <p 
+                        *ngIf='formError && form.controls.country.errors.required'
+                    >This field is required</p>
+                </div>
             </div>
         </div>
-
     </div>
 </div>
