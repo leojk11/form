@@ -20,7 +20,9 @@ export class FormComponent implements OnInit {
   allInputs: SingleInput[];
 
   formError: boolean = false;
+
   emailInvalid: boolean;
+  emailInvalidMessage: string;
 
   showUserMessage: boolean
   userMessage: string;
@@ -61,11 +63,13 @@ export class FormComponent implements OnInit {
     switch(emailRegex.test(form.value.sender_mail)) {
       case false:
         this.emailInvalid = true;
+        this.emailInvalidMessage = 'Your email address is not valid';
 
         return
 
       case true:
         this.emailInvalid = false
+        this.emailInvalidMessage = '';
     }
 
     // check if user chose country, if not remind them to choose

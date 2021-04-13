@@ -9,6 +9,7 @@
                 <input 
                     ngModel 
                     #emailField='ngModel' 
+                    class='form-input'
                     [name]='singleInput.name' 
                     [type]="singleInput.type" 
                     [placeholder]="singleInput.placeholder"
@@ -22,13 +23,23 @@
                 >
         
                 <div class="error" *ngIf='formError && emailField.invalid'>
-                    <p *ngIf='emailField.errors!.required'>This field is required</p>
-                    <p *ngIf='emailField.errors!.minlength'>Email must be at least 3 characters</p>
-                    <p *ngIf='emailField.errors!.maxlength'>Email cannot be more than 64 characters</p>
+                    <p 
+                        *ngIf='emailField.errors!.required'
+                    >This field is required</p>
+
+                    <p 
+                        *ngIf='emailField.errors!.minlength'
+                    >Email must be at least {{ emailField.errors!.minlength.requiredLength }} characters</p>
+
+                    <p 
+                        *ngIf='emailField.errors!.maxlength'
+                    >Email cannot be more than {{ emailField.errors!.maxlength.requredLength }} characters</p>
                 </div>
-                <div class="error" *ngIf='emailInvalid'>
-                    <p>Your email address is not valid</p>
-                </div>
+
+                <app-val-error 
+                    [errorMessage]='emailInvalidMessage' 
+                    [toggleError]='emailInvalid'
+                ></app-val-error>
             </div>
 
 
@@ -52,9 +63,17 @@
                 >
 
                 <div class="error" *ngIf='formError && nameField.invalid'>
-                    <p *ngIf='nameField.errors!.required'>This field is required</p>
-                    <p *ngIf='nameField.errors!.minlength'>Email must be at least 3 characters</p>
-                    <p *ngIf='nameField.errors!.maxlength'>Email cannot be more than 64 characters</p>
+                    <p 
+                        *ngIf='nameField.errors!.required'
+                    >This field is required</p>
+
+                    <p 
+                        *ngIf='nameField.errors!.minlength'
+                    >Email must be at least {{ nameField.errors!.minlength.requiredLength }} characters</p>
+
+                    <p 
+                        *ngIf='nameField.errors!.maxlength'
+                    >Email cannot be more than {{ nameField.errors!.maxlength.requredLength }} characters</p>
                 </div>
             </div>
 
@@ -68,19 +87,22 @@
                     required
                     [attr.disabled] = "sendingEmail ? 'disabled' : null"
                 >   
-                    <option *ngFor='let option of singleInput.options' [value]='option.balue'>{{ option.label }}</option>
+                    <option 
+                        *ngFor='let option of singleInput.options' 
+                        [value]='option.balue'
+                    >{{ option.label }}</option>
                 </select>
 
-                <div class="error" *ngIf='showCountryError'>
-                    <p>{{ countryError }}</p>
-                </div>
+                <app-val-error 
+                    [errorMessage]='countryError' 
+                    [toggleError]='showCountryError'
+                ></app-val-error>
             </div>
         </div>
                     
         <button [attr.disabled] = "sendingEmail ? 'disabled' : null">Submit</button>
 
         <h3 *ngIf='showUserMessage' class='final-message'>{{ userMessage }}</h3>
-
         <h3 *ngIf='showUserError' class='final-message final-error'>{{ userError }}</h3>
     </form>
 </div>
