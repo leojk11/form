@@ -1,4 +1,5 @@
 <div [formGroup]='form' class='form-field'>
+
     <div [ngSwitch]='input.type'>
 
         <div class='form-field' *ngSwitchCase="'text'">
@@ -67,10 +68,15 @@
             <label>{{ input.label }}</label>
 
             <div class="inner-wrapper">
-                <select class='form-field-input'  [formControlName]="input.name" [attr.disabled]="sendingMail ? 'disabled' : null">
-                
-                    <option *ngFor='let option of input.options' [value]='option.balue'>{{ option.label }}</option>
-    
+                <select 
+                    class='form-field-input'  
+                    [formControlName]="input.name" 
+                    [attr.disabled]="sendingMail ? 'disabled' : null"
+                >
+                    <option 
+                        *ngFor='let option of input.options' 
+                        [value]='option.balue'
+                    >{{ option.label }}</option>
                 </select>
     
                 <div class="errors" *ngIf='formError && form.controls.country.invalid'>

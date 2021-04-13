@@ -32,8 +32,6 @@ export class FormComponent implements OnInit {
   toFormGroup(inputs: SingleInput[]): FormGroup {
     const group: any = {};
 
-    console.log(inputs);
-
     inputs.forEach(input => {
       let validator: ValidatorFn[] = input.rules.split('|')[0] ? [Validators.required, Validators.minLength(3)] : [];
 
@@ -71,7 +69,6 @@ export class FormComponent implements OnInit {
 
   onSubmitNew() {
     var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
-    console.log(this.form);
 
     switch(this.form.status) {
       case 'INVALID':

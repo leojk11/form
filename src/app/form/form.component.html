@@ -1,4 +1,6 @@
 <div class='form-wrapper'>
+    <h1>Dynamic Form</h1>
+
     <form (ngSubmit)='onSubmitNew()' [formGroup]='form'>
 
         <div *ngFor='let singleInput of allInputs'>
@@ -6,8 +8,12 @@
             <app-form-input [input]='singleInput' [form]='form' [formError]='formError' [sendingMail]='sendingEmail'></app-form-input>   
 
         </div>
-                    
-        <button [attr.disabled] = "sendingEmail ? 'disabled' : null">Submit</button>
+
+        <div class="button-wrapper">
+
+            <button [attr.disabled] = "sendingEmail ? 'disabled' : null">Submit</button>
+            
+        </div>      
 
         <h3 *ngIf='showUserMessage' class='final-message'>{{ userMessage }}</h3>
         <h3 *ngIf='showUserError' class='final-message final-error'>{{ userError }}</h3>

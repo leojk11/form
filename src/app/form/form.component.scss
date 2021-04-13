@@ -1,54 +1,39 @@
 .form-wrapper {
     padding: 20px;
+
+    width: 500px;
 }
 
-.form-field {
+.button-wrapper {
     display: flex;
+    justify-content: flex-end;
     align-items: center;
-    justify-content: flex-start;
 
-    margin-top: 15px;
-
-    label {
-        width: 150px;
-    }
-    input {
-        width: 300px;
-
+    button {
+        width: 100px;
+    
         padding: 10px;
-
+        margin-top: 35px;
+    
         border: none;
         border-radius: 5px;
 
-        background-color: whitesmoke;
-
         outline: none;
-    }
+    
+        background-color: orange;
+    
+        cursor: pointer;
 
-    select {
-        padding: 10px;
+        box-shadow: 5px 2px 11px -4px rgba(0,0,0,0.75);
 
-        border: none;
+        transition: all 0.2s;
 
-        background-color: whitesmoke;
-
-        outline: none;
+        &:hover {
+            background-color: rgba(orange, 0.8);
+        }
     }
 }
 
-button {
-    width: 100px;
-
-    padding: 10px;
-    margin-top: 15px;
-
-    border: none;
-    outline: none;
-
-    background-color: orange;
-
-    cursor: pointer;
-}
 
 .error {
     margin-left: 10px;

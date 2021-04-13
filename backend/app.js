@@ -79,8 +79,6 @@ app.post('/send-email', (req, res) => {
             console.log('Email sent:' + info.response);
         }
     })
-
-    // res.status(200).json({ mess: 'mail sent' })
 })
 
 const port = process.env.PORT || 5000;
