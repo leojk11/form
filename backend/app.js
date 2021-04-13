@@ -6,6 +6,7 @@ const path = require('path');
 require('dotenv/config');
 
 const nodemailer = require('nodemailer');
+const { query } = require('@angular/animations');
 
 const app = express();
 app.use(session({
@@ -24,16 +25,32 @@ app.post('/send-email', (req, res) => {
     switch(emailRegex.test(req.query.userEmail)) {
         case false:
             res.status(200).json({ mess: 'Your email is invalid' });
+
+            return;
+        case '':
+            res.status(200).json({ mess: 'Please enter your email' });
+
+            return;
     }
 
     switch(req.query.userName) {
         case '':
-            res.status(200).json({ mess: 'Please enter your name' })
+            res.status(200).json({ mess: 'Please enter your name' });
+
+            return;
+    }
+
+    if(req.query.userName.length < 3) {
+        res.status(200).json({ mess: 'Your name have to be at least 3 characters long' });
+
+        return;
     }
 
     switch(req.query.userCountry) {
         case 'country':
-            res.status(200).json({ mess: 'Please choose your country' })
+            res.status(200).json({ mess: 'Please choose your country' });
+
+            return;
     }
 
     const userEmail = req.query.userEmail;

@@ -2,6 +2,7 @@
     <form #form='ngForm' (ngSubmit)='onSubmit(form)'>
 
         <div *ngFor='let singleInput of allInputs'>
+
             <div class="form-field" *ngIf="singleInput.type === 'email'" >
                 <label>{{ singleInput.label }}</label>
 

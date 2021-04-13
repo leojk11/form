@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+
+// singleInput model
 import { SingleInput } from '../single-input.model';
+
+// singleInput service
 import { SingleInputService } from '../single-input.service';
+
+// form service
 import { FormServiceService } from '../form-service.service';
 
 @Component({
@@ -18,7 +24,7 @@ export class FormComponent implements OnInit {
 
   showUserMessage: boolean
   userMessage: string;
-  showUserError: boolean
+  showUserError: boolean = false;
   userError: string;
   showCountryError: boolean;
   countryError: string;
@@ -42,9 +48,8 @@ export class FormComponent implements OnInit {
 
 
   onSubmit(form: NgForm) {
-    console.log(form);
     var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
-console.log('leo1')
+
     // check if form is invalid
     switch(form.invalid) {
       case true:
@@ -52,10 +57,7 @@ console.log('leo1')
         return;
     }
 
-    console.log('leo2')
     // check if email is valid, if not show error message
-    console.log(form.value.sender_mail);
-    console.log(emailRegex.test(form.value.sender_mail));
     switch(emailRegex.test(form.value.sender_mail)) {
       case false:
         this.emailInvalid = true;
@@ -65,8 +67,6 @@ console.log('leo1')
       case true:
         this.emailInvalid = false
     }
-
-    console.log('leo3')
 
     // check if user chose country, if not remind them to choose
     switch(form.value.country) {
@@ -80,8 +80,6 @@ console.log('leo1')
         this.showCountryError = false;
         this.countryError = '';
     }
-
-    console.log('leo4')
 
     this.sendingEmail = true;
 
@@ -97,13 +95,25 @@ console.log('leo1')
       // check if response is ok, show message that email has been sent
       switch(response.mess) {
         case 'Your email is invalid':
-          console.log('invalid email')
+          this.showUserError = true;
+          this.userError = response.mess;
+
+          this.sendingEmail = false;
+
           return;
         case 'Please enter your name':
-          console.log('enter your name')
+          this.showUserError = true;
+          this.userError = response.mess;
+
+          this.sendingEmail = false;
+          
           return;
         case 'Please choose your country':
-          console.log('choose country')
+          this.showUserError = true;
+          this.userError = response.mess;
+
+          this.sendingEmail = false;
+
           return;
         case 'mail sent':
           // if email has been sent, show message
@@ -118,15 +128,7 @@ console.log('leo1')
             this.showUserMessage = false;
             this.userMessage = '';
           }, 5000);
-        
-        case 'ERROR_500':
-          // if there is an error, tell the user that there was error
-          this.showUserError = true;
-          this.userError = 'There was an error sending email';
-
-          this.sendingEmail = false;
       }
-      
     });
   }
 }
