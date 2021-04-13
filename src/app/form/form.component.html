@@ -12,10 +12,11 @@
         <div class="button-wrapper">
 
             <button [attr.disabled] = "sendingEmail ? 'disabled' : null">Submit</button>
-            
+
         </div>      
 
         <h3 *ngIf='showUserMessage' class='final-message'>{{ userMessage }}</h3>
         <h3 *ngIf='showUserError' class='final-message final-error'>{{ userError }}</h3>
+        
     </form>
 </div>
