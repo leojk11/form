@@ -1,103 +1,10 @@
 <div class='form-wrapper'>
-    <form #form='ngForm' (ngSubmit)='onSubmit(form)'>
+    <form (ngSubmit)='onSubmitNew()' [formGroup]='form'>
 
         <div *ngFor='let singleInput of allInputs'>
 
-            <div class="form-field" *ngIf="singleInput.type === 'email'" >
-                <label>{{ singleInput.label }}</label>
+            <app-form-input [input]='singleInput' [form]='form' [formError]='formError' [sendingMail]='sendingEmail'></app-form-input>   
 
-                <input 
-                    ngModel 
-                    #emailField='ngModel' 
-                    class='form-input'
-                    [name]='singleInput.name' 
-                    [type]="singleInput.type" 
-                    [placeholder]="singleInput.placeholder"
-                    [defaultValue]='singleInput.default_value'
-                    [multiple]='singleInput.multiple'
-                    [readonly]='singleInput.readonly' 
-                    [required]="singleInput.rules.split('|')[0]" 
-                    [minlength]="singleInput.rules.split('|')[1].split(':')[1]"
-                    [maxlength]="singleInput.rules.split('|')[2].split(':')[2]"
-                    [attr.disabled] = "sendingEmail ? 'disabled' : null"
-                >
-        
-                <div class="error" *ngIf='formError && emailField.invalid'>
-                    <p 
-                        *ngIf='emailField.errors!.required'
-                    >This field is required</p>
-
-                    <p 
-                        *ngIf='emailField.errors!.minlength'
-                    >Email must be at least {{ emailField.errors!.minlength.requiredLength }} characters</p>
-
-                    <p 
-                        *ngIf='emailField.errors!.maxlength'
-                    >Email cannot be more than {{ emailField.errors!.maxlength.requredLength }} characters</p>
-                </div>
-
-                <app-val-error 
-                    [errorMessage]='emailInvalidMessage' 
-                    [toggleError]='emailInvalid'
-                ></app-val-error>
-            </div>
-
-
-            <div class="form-field" *ngIf="singleInput.type === 'text'" >
-                <label>{{ singleInput.label }}</label>
-        
-                <input 
-                    ngModel 
-                    #nameField='ngModel'
-                    [name]='singleInput.name'
-                    [type]="singleInput.type"
-                    [placeholder]='singleInput.placeholder'
-                    [value]='singleInput.value'
-                    [defaultValue]='singleInput.default_value'
-                    [mutiple]='singleInput.mutiple'
-                    [readonly]='singleInput.readonly'
-                    [required]="singleInput.rules.split('|')[0]" 
-                    [minlength]="singleInput.rules.split('|')[1].split(':')[1]"
-                    [maxlength]="singleInput.rules.split('|')[2].split(':')[2]"
-                    [attr.disabled] = "sendingEmail ? 'disabled' : null"
-                >
-
-                <div class="error" *ngIf='formError && nameField.invalid'>
-                    <p 
-                        *ngIf='nameField.errors!.required'
-                    >This field is required</p>
-
-                    <p 
-                        *ngIf='nameField.errors!.minlength'
-                    >Email must be at least {{ nameField.errors!.minlength.requiredLength }} characters</p>
-
-                    <p 
-                        *ngIf='nameField.errors!.maxlength'
-                    >Email cannot be more than {{ nameField.errors!.maxlength.requredLength }} characters</p>
-                </div>
-            </div>
-
-            <div class="form-field" *ngIf="singleInput.type === 'select'">
-                <label>{{ singleInput.label }}</label>
-
-                <select 
-                    [(ngModel)]='singleInput.name' 
-                    [name]='singleInput.name' 
-                    [value]='singleInput.default_value'
-                    required
-                    [attr.disabled] = "sendingEmail ? 'disabled' : null"
-                >   
-                    <option 
-                        *ngFor='let option of singleInput.options' 
-                        [value]='option.balue'
-                    >{{ option.label }}</option>
-                </select>
-
-                <app-val-error 
-                    [errorMessage]='countryError' 
-                    [toggleError]='showCountryError'
-                ></app-val-error>
-            </div>
         </div>
                     
         <button [attr.disabled] = "sendingEmail ? 'disabled' : null">Submit</button>

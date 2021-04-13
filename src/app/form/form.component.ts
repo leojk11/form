@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormControl, FormGroup, NgForm, ValidatorFn, Validators } from '@angular/forms';
 
 // singleInput model
 import { SingleInput } from '../single-input.model';
@@ -18,6 +18,8 @@ import { FormServiceService } from '../form-service.service';
 export class FormComponent implements OnInit {
 
   allInputs: SingleInput[];
+  form!: FormGroup;
+  payload!: '';
 
   formError: boolean = false;
 
@@ -33,6 +35,29 @@ export class FormComponent implements OnInit {
 
   sendingEmail: boolean;
 
+  toFormGroup(inputs: SingleInput[]): FormGroup {
+    const group: any = {};
+
+    console.log(inputs);
+
+    inputs.forEach(input => {
+      let validator: ValidatorFn[] = input.rules.split('|')[0] ? [Validators.required, Validators.minLength(3)] : [];
+
+      switch (input.type) {
+        case "email":
+          validator.push(Validators.email);
+          break;
+
+        default:
+          break;
+      }
+
+      group[input.name] = validator.length > 0 ? new FormControl(input.value || '', validator) : new FormControl(input.value || '');
+    })
+
+    return new FormGroup(group);
+  }
+
   constructor(
     private inputService: SingleInputService,
     private formService: FormServiceService
@@ -42,60 +67,34 @@ export class FormComponent implements OnInit {
     this.getInputs();
   }
 
-  getInputs() {
-    this.inputService.getInputs().subscribe(inputs => {
+  async getInputs() {
+    await this.inputService.getInputs().subscribe(inputs => {
       this.allInputs = inputs;
+
+      this.form = this.toFormGroup(inputs);
     });
   }
 
-
-  onSubmit(form: NgForm) {
+  onSubmitNew() {
     var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
+    console.log(this.form);
 
-    // check if form is invalid
-    switch(form.invalid) {
-      case true:
+    switch(this.form.status) {
+      case 'INVALID':
         this.formError = true;
+
         return;
     }
 
-    // check if email is valid, if not show error message
-    switch(emailRegex.test(form.value.sender_mail)) {
-      case false:
-        this.emailInvalid = true;
-        this.emailInvalidMessage = 'Your email address is not valid';
-
-        return
-
-      case true:
-        this.emailInvalid = false
-        this.emailInvalidMessage = '';
-    }
-
-    // check if user chose country, if not remind them to choose
-    switch(form.value.country) {
-      case 'country':
-        this.showCountryError = true;
-        this.countryError = 'Please choose your country';
-
-        return;
-      
-      default:
-        this.showCountryError = false;
-        this.countryError = '';
+    const info = {
+      email: this.form.value.sender_mail,
+      name: this.form.value.person_name,
+      country: this.form.value.country 
     }
 
     this.sendingEmail = true;
 
-    // get information from form
-    const info = {
-      email: form.value.sender_mail,
-      name: form.value.person_name,
-      country:form.value.country 
-    }
-
     this.formService.sendEmail(info).subscribe(response => {
-      console.log(response);
       // check if response is ok, show message that email has been sent
       switch(response.mess) {
         case 'Your email is invalid':
@@ -132,6 +131,11 @@ export class FormComponent implements OnInit {
             this.showUserMessage = false;
             this.userMessage = '';
           }, 5000);
+      }
+      
+      if(response.mess !== 'mail sent') {
+        this.showUserError = true;
+        this.userError = 'There was an error sending your mail.'
       }
     });
   }

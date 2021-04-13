@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { SingleInput } from './single-input.model';
+import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +21,6 @@ export class FormServiceService {
 
   sendEmail(info: {name: string, email: string, country: string}): Observable<any> {
     const url = `${this.apiUrl}/?userEmail=${info.email}&userName=${info.name}&userCountry=${info.country}`;
-
-    console.log(url);
 
     return this.http.post(url, this.httpOptions).pipe(
       tap(_ => console.log('email got send')),

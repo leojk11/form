@@ -1,0 +1,39 @@
+.form-field {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    margin-top: 15px;
+
+    select {
+        padding: 10px;
+
+        border: none;
+
+        background-color: whitesmoke;
+
+        outline: none;
+    }
+
+    .errors {
+        margin-left: 15px;
+
+        p {
+            color: red;
+        }
+    }
+}
+.form-field-input {
+    width: 300px;
+
+    padding: 10px;
+
+    border: none;
+    border-radius: 5px;
+
+    background-color: whitesmoke;
+
+    outline: none;
+
+    margin-left: 15px;
+}
