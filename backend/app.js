@@ -2,7 +2,6 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const path = require('path');
 require('dotenv/config');
 
 const nodemailer = require('nodemailer');
@@ -21,6 +20,7 @@ app.use(bodyParser.json());
 app.post('/send-email', (req, res) => {
     var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
 
+    // check if passed email is valid email
     switch(emailRegex.test(req.query.userEmail)) {
         case false:
             res.status(200).json({ mess: 'Your email is invalid' });
@@ -32,6 +32,7 @@ app.post('/send-email', (req, res) => {
             return;
     }
 
+    // check if email is passed
     switch(req.query.userName) {
         case '':
             res.status(200).json({ mess: 'Please enter your name' });
@@ -39,12 +40,14 @@ app.post('/send-email', (req, res) => {
             return;
     }
 
+    // check if passed name has length of at least 3 characters
     if(req.query.userName.length < 3) {
         res.status(200).json({ mess: 'Your name have to be at least 3 characters long' });
 
         return;
     }
 
+    // check if country is passed, form field will send country if nothing is selected
     switch(req.query.userCountry) {
         case 'country':
             res.status(200).json({ mess: 'Please choose your country' });
@@ -75,13 +78,11 @@ app.post('/send-email', (req, res) => {
             console.log(error);
         } else {
             res.status(200).json({ mess: 'mail sent' })
-            console.log('Email sent:' + info.response);
         }
     })
 })
 
 const port = process.env.PORT || 5000;
-// const hostname = '199.188.204.226';
 app.listen(port, () => {
     console.log(`App is listening on port ${port}`);
 });
