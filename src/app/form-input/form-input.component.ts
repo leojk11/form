@@ -1,3 +1,4 @@
+import { animate, group, query, style, transition, trigger } from '@angular/animations';
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { SingleInput } from '../single-input.model';
@@ -5,7 +6,17 @@ import { SingleInput } from '../single-input.model';
 @Component({
   selector: 'app-form-input',
   templateUrl: './form-input.component.html',
-  styleUrls: ['./form-input.component.scss']
+  styleUrls: ['./form-input.component.scss'],
+  animations: [
+    trigger('errorAnim', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate(500, style({
+          opacity: 1
+        }))
+      ])
+    ]),
+  ]
 })
 export class FormInputComponent {
 

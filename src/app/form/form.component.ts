@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, NgForm, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 // singleInput model
 import { SingleInput } from '../single-input.model';
@@ -33,7 +33,7 @@ export class FormComponent implements OnInit {
     const group: any = {};
 
     inputs.forEach(input => {
-      let validator: ValidatorFn[] = input.rules.split('|')[0] ? [Validators.required, Validators.minLength(3)] : [];
+      let validator: ValidatorFn[] = [Validators.required, Validators.minLength(3), Validators.maxLength(64)];
 
       switch (input.type) {
         case "email":
@@ -47,6 +47,7 @@ export class FormComponent implements OnInit {
       group[input.name] = validator.length > 0 ? new FormControl(input.value || '', validator) : new FormControl(input.value || '');
     })
 
+    console.log(group);
     return new FormGroup(group);
   }
 
@@ -68,11 +69,16 @@ export class FormComponent implements OnInit {
   }
 
   onSubmitNew() {
+    console.log(this.form);
     var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
 
     switch(this.form.status) {
       case 'INVALID':
         this.formError = true;
+
+        setTimeout(() => {
+          this.formError = false;
+        }, 5000);
 
         return;
     }

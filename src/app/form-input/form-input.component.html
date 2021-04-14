@@ -19,7 +19,7 @@
                     [attr.disabled]="sendingMail ? 'disabled' : null"
                 >
 
-                <div class="errors" *ngIf="formError && form.controls.person_name.invalid">
+                <div class="errors" *ngIf="formError && form.controls.person_name.invalid" @errorAnim>
                     <p 
                         *ngIf='formError && form.controls.person_name.errors.required'
                     >This field is required</p>
@@ -48,7 +48,7 @@
                     [attr.disabled]="sendingMail ? 'disabled' : null"
                 >
 
-                <div class="errors" *ngIf='formError && form.controls.sender_mail.invalid'>
+                <div class="errors" *ngIf='formError && form.controls.sender_mail.invalid' @errorAnim>
                     <p 
                         *ngIf='form.controls.sender_mail.errors.required'
                     >This field is required</p>
@@ -79,7 +79,7 @@
                     >{{ option.label }}</option>
                 </select>
     
-                <div class="errors" *ngIf='formError && form.controls.country.invalid'>
+                <div class="errors" *ngIf='formError && form.controls.country.invalid' @errorAnim>
                     <p 
                         *ngIf='formError && form.controls.country.errors.required'
                     >This field is required</p>
