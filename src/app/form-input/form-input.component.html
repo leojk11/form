@@ -1,4 +1,4 @@
-<div [formGroup]='form' class='form-field'>
+<div [formGroup]='form'>
 
     <div [ngSwitch]='input.type'>
 
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <div class='form-field' *ngSwitchCase="'email'">
+        <div class='form-field no-margin-top' *ngSwitchCase="'email'">
             <label>{{ input.label }}</label>
 
             <div class="inner-wrapper">

@@ -67,14 +67,7 @@ export class FormComponent implements OnInit {
 
     this.formService.sendEmail(info).subscribe(response => {
       // check if response is ok, show message that email has been sent
-      if(response.mess !== 'main sent') {
-        this.showUserError = true;
-        this.userError = response.mess;
-
-        this.sendingEmail = false;
-
-        return;
-      } else {
+      if(response.mess === 'mail sent') {
         // if email has been sent, show message
         this.showUserMessage = true;
         this.userMessage = `Email has been sent to: ${info.email}`;
@@ -87,6 +80,21 @@ export class FormComponent implements OnInit {
           this.showUserMessage = false;
           this.userMessage = '';
         }, 5000);
+
+        return;
+      } 
+      else {
+        this.showUserError = true;
+        this.userError = response.mess;
+
+        this.sendingEmail = false;
+
+        setTimeout(() => {
+          this.showUserError = false;
+          this.userError = '';
+        }, 3000);
+
+        return;
       }
     });
   }

@@ -14,6 +14,12 @@ import { SingleInput } from '../single-input.model';
         animate(500, style({
           opacity: 1
         }))
+      ]),
+      transition(':leave', [
+        style({ opacity: 1 }),
+        animate(500, style({
+          opacity: 0
+        }))
       ])
     ]),
   ]
