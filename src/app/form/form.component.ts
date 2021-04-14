@@ -4,9 +4,6 @@ import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms'
 // singleInput model
 import { SingleInput } from '../single-input.model';
 
-// singleInput service
-import { SingleInputService } from '../single-input.service';
-
 // form service
 import { FormServiceService } from '../form-service.service';
 
@@ -29,49 +26,24 @@ export class FormComponent implements OnInit {
 
   sendingEmail: boolean;
 
-  toFormGroup(inputs: SingleInput[]): FormGroup {
-    const group: any = {};
-
-    inputs.forEach(input => {
-      let validator: ValidatorFn[] = [Validators.required, Validators.minLength(3), Validators.maxLength(64)];
-
-      switch (input.type) {
-        case "email":
-          validator.push(Validators.email);
-          break;
-
-        default:
-          break;
-      }
-
-      group[input.name] = validator.length > 0 ? new FormControl(input.value || '', validator) : new FormControl(input.value || '');
-    })
-
-    console.log(group);
-    return new FormGroup(group);
-  }
-
-  constructor(
-    private inputService: SingleInputService,
-    private formService: FormServiceService
-  ) { }
+  constructor(private formService: FormServiceService) { }
 
   ngOnInit(): void {
     this.getInputs();
   }
 
-  async getInputs() {
-    await this.inputService.getInputs().subscribe(inputs => {
+  // get all inputs from api
+  getInputs() {
+    this.formService.getInputs().subscribe(inputs => {
       this.allInputs = inputs;
 
-      this.form = this.toFormGroup(inputs);
+      this.form = this.formService.toFormGroup(inputs);
     });
   }
 
+  // submit form function
   onSubmitNew() {
-    console.log(this.form);
-    var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
-
+    // check if form is valid
     switch(this.form.status) {
       case 'INVALID':
         this.formError = true;
@@ -83,60 +55,38 @@ export class FormComponent implements OnInit {
         return;
     }
 
+    // get form value
     const info = {
       email: this.form.value.sender_mail,
       name: this.form.value.person_name,
       country: this.form.value.country 
     }
 
+    // when sending email is true it disables the entire form
     this.sendingEmail = true;
 
     this.formService.sendEmail(info).subscribe(response => {
       // check if response is ok, show message that email has been sent
-      switch(response.mess) {
-        // if no email is passed the server will return error
-        case 'Your email is invalid':
-          this.showUserError = true;
-          this.userError = response.mess;
-
-          this.sendingEmail = false;
-
-          return;
-        // if no name is passed the server will return error
-        case 'Please enter your name':
-          this.showUserError = true;
-          this.userError = response.mess;
-
-          this.sendingEmail = false;
-          
-          return;
-        // if no country is passed the server will return error
-        case 'Please choose your country':
-          this.showUserError = true;
-          this.userError = response.mess;
-
-          this.sendingEmail = false;
-
-          return;
-        case 'mail sent':
-          // if email has been sent, show message
-          this.showUserMessage = true;
-          this.userMessage = `Email has been sent to: ${info.email}`;
-  
-          // turn off disabled from all inputs and button
-          this.sendingEmail = false;
-
-          // remove the message after 5 sec
-          setTimeout(() => {
-            this.showUserMessage = false;
-            this.userMessage = '';
-          }, 5000);
-      }
-      
-      // if email is not sent show error  
-      if(response.mess !== 'mail sent') {
+      if(response.mess !== 'main sent') {
         this.showUserError = true;
-        this.userError = 'There was an error sending your mail.'
+        this.userError = response.mess;
+
+        this.sendingEmail = false;
+
+        return;
+      } else {
+        // if email has been sent, show message
+        this.showUserMessage = true;
+        this.userMessage = `Email has been sent to: ${info.email}`;
+
+        // turn off disabled from all inputs and button
+        this.sendingEmail = false;
+
+        // remove the message after 5 sec
+        setTimeout(() => {
+          this.showUserMessage = false;
+          this.userMessage = '';
+        }, 5000);
       }
     });
   }
